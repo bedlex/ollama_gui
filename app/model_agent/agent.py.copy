@@ -1,0 +1,92 @@
+"""Module to use for chatting with Ollama."""
+from abc import ABC
+import ollama
+
+from typing import List
+
+class Ollama(ABC):
+    @staticmethod
+    def list() -> List[str]:
+        """Return available list in ollama server"""
+        return [el.get("name") for el in ollama.list().get("models")]
+
+
+class Agent:
+    """Class to represent a chat agent."""
+    def __init__(self):
+        self.model = str()
+        self.messages = list()
+        self.active_chat = bool()
+        self.agent_set = False
+
+    def set_agent(self, model: str, role: str, active_chat: bool = False):
+        """
+        Class method to initialize class object
+
+        Parameters:
+            model(str): Specified model name
+            role(str): Specified chat role
+            active_chat(bool): Specified chat mode
+        """
+
+        self.model = model
+        self.messages = [
+            {
+                'role': 'system',
+                'content': role
+            }
+        ]
+        self.active_chat = active_chat
+        self.agent_set = True
+
+    def chat(self, message: str):
+        """
+        Class method to receive response from chatbot
+
+        Parameters:
+            message(str): Message to bot
+        Returns:
+            str: Message from bot
+        """
+        try:
+            if self.agent_set:
+                self.messages.append(
+                    {
+                        'role': 'user',
+                        'content': message
+                    }
+                )
+                response = ollama.chat(model=self.model, messages=self.messages)
+
+                if self.active_chat:
+                    self.messages.append(
+                        {
+                            'role': 'assistant',
+                            'content': response['message']['content']
+                        }
+                    )
+                else:
+                    self.messages.pop()
+
+                return response['message']['content']
+            else:
+                return "Need to set agent first"
+        except Exception as e:
+            print(e)
+
+def main():
+    """
+    Example of usage chatbot agent
+    :return:
+    """
+    agent = Agent()
+    agent.set_agent('mistral:latest', 'You guy who track everysing ', active_chat=True)
+
+    while True:
+        message = input("user: ")
+        response = agent.chat(message)
+        print(response)
+
+
+if __name__ == "__main__":
+    main()

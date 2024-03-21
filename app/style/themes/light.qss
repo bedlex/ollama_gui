@@ -1,0 +1,46 @@
+QWidget {
+    background-color: #E5E2E0;
+    font-size: 20px;
+}
+QMenuBar {
+    background-color: #E5E2E0;
+    color: #000;
+}
+QMenu {
+    background-color: #E5E2E0;
+    color: #000;
+}
+
+
+QMenu::item:selected {
+    background-color: #308CC6;
+    color: #000;
+}
+
+QCheckBox {
+    background-color: #FFF;
+    color: #000;
+}
+
+QLabel {
+    color: #000;
+}
+
+QPushButton {
+    background-color: #308CC6;
+    color: #000;
+}
+
+QComboBox, QSpinBox {
+    background-color: #E5E2E0;
+    color: #000;
+}
+
+QComboBox::item:selected {
+    background-color: #308CC6;
+}
+
+QPlainTextEdit, QTextBrowser {
+    background-color: #FFF;
+    color: #000;
+}
